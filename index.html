@@ -1,0 +1,565 @@
+
+<p>Originally Published at <a href=“https://rapidapi.com/blog/google-translate-api-tutorial/”>https://rapidapi.com/blog/google-translate-api-tutorial/</a>.</p>
+
+We are back with yet another <a href=“https://rapidapi.com/blog/category/tutorial/”>tutorial</a> on Google Translate API. This time we are going to address the language personalization feature on the web with this API.
+
+As a non-native English speaker, if you come across a web form in English that you want to fill out and submit, it can be difficult to interpret the meaning of each form field. Using the Google Translate API, we can build language personalization features for web forms so that you can choose the language while filling out the form.
+
+If this sounds interesting, then follow along this blog post to build a demo web form with language translation capability, powered by RapidAPI. But first, a very brief introduction to Google Translate API.
+<h2>Is there a Google Translate API?</h2>
+<a href=“https://translate.google.com/”>Google Translate</a> needs no introduction. We all know about this popular service from Google, and you would have used it in the past via the Google Translate app. Under RapidAPI, you can work with the Google Translate API to call this service programmatically. Check out the <a href=“https://rapidapi.com/googlecloud/api/google-translate1”>API console</a> to know more about the API.
+
+<img class=“alignnone size-large wp-image-3648” src=“https://rapidapi.com/blog/wp-content/uploads/2020/01/google-translate-api-console-1024x712.png” alt=“google translate api console” width=“1024” height=“712” />
+
+A quick glance into the API endpoints tells us that it supports two endpoints.
+
+<img class=“alignnone size-full wp-image-3666” src=“https://rapidapi.com/blog/wp-content/uploads/2020/01/google-translate-api-endpoints.png” alt=“google translate api endpoints” width=“338” height=“275” />
+<h3><span style=“color: #6ea3ff;”>POST</span> Detect</h3>
+The “POST Detect” endpoint returns the language code of the text string that is passed to API as input.
+<h3><span style=“color: #6ea3ff;”>POST</span> Translate</h3>
+The “POST Translate” endpoint returns the translated text for a given input string that is passed to the API as input. Along with the input string, it also expects the language code of the translated language.
+<h2>Is the Google Translate API Free?</h2>
+On RapidAPI, the Google Translate API <a href=“https://rapidapi.com/googlecloud/api/google-translate1/pricing”>is free up to 50 requests/day</a>. Any additional API requests cost $0.05 each following the first 50 calls.
+
+<center><a id=“sidebarCTA” class=“vce-button–style-basic vce-button–style-basic–border-round vce-button–style-basic–size-medium vce-button–style-basic–color-557cbf–fff” href=“https://rapidapi.com/googlecloud/api/google-translate1”>Connect to the Google Translate API</a></center>
+<h2>How to get access to the Google Translate API? How to get an API Key?</h2>
+<h3>1. Sign Up for Free RapidAPI Account</h3>
+<img class=“alignnone size-large wp-image-2817” src=“https://rapidapi.com/blog/wp-content/uploads/2019/08/signup-for-rapidapi-1024x645.png” alt=“RapidAPI Free API Key” width=“1024” height=“645” />
+
+To begin using the Google Translate API, you’ll first need to sign up for a free RapidAPI developer account. With this account, you get a universal API Key to access all APIs hosted in RapidAPI.
+
+RapidAPI is the world’s largest API marketplace, with over 10,000 APIs and a community of over 1,000,000 developers. Our goal is to help developers find and connect to APIs to help them build amazing apps.
+<h3>2. Subscribe to Google Translate API</h3>
+<img class=“alignnone size-full wp-image-3667” src=“https://rapidapi.com/blog/wp-content/uploads/2020/01/google-translate-api-pricing.png” alt=“google translate api pricing” width=“762” height=“378” />
+
+Once signed in, log in to your RapidAPI account and access the API console. Click on the <a href=“https://rapidapi.com/googlecloud/api/google-translate1/pricing”>“Pricing” tab</a> and opt-in for the basic subscription that gives you 50 free API calls to Google Translate API per day.
+<h3>3. Test Your API Subscription</h3>
+Let’s test your Google Translate API subscription.
+
+Select the “POST Translate” endpoint within the API console.
+
+<img class=“alignnone size-full wp-image-3668” src=“https://rapidapi.com/blog/wp-content/uploads/2020/01/google-translate-api-test.png” alt=“google translate api test” width=“988” height=“496” />
+
+The default values of parameters indicate that we are going to translate the text “Hello, world!” to Spanish (with language code ‘es’).
+
+Trigger the API, and you should see the translated text in the API response (<a href=“https://rapidapi.com/blog/api-glossary/json/”>JSON format</a>).
+
+<img class=“alignnone size-full wp-image-3669” src=“https://rapidapi.com/blog/wp-content/uploads/2020/01/google-translate-api-json-response-body.png” alt=“google translate api json response body” width=“358” height=“246” />
+
+So, “Hello, world!” in Spanish translates to “Hola Mundo!”.
+
+If you want to try translating to other languages then you can check out the language codes defined as per the <a href=“https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes”>ISO 639 code definitions</a>.
+
+<center><a id=“sidebarCTA” class=“vce-button–style-basic vce-button–style-basic–border-round vce-button–style-basic–size-medium vce-button–style-basic–color-557cbf–fff” href=“https://rapidapi.com/googlecloud/api/google-translate1”>Connect to the Google Translate API</a></center>
+<h2>How To Use the Google Translate API with JavaScript: Build a Web Form with Translation Features</h2>
+We now show you how to integrate this API into a web-based form. Be it a form hosted on a website or a mobile app. You can quickly integrate Google Translate into your front end code to provide language translation features.
+
+Here is what a plain form looks like:
+
+<img class=“alignnone size-full wp-image-3671” src=“https://rapidapi.com/blog/wp-content/uploads/2020/01/plain-contact-form.png” alt=“plain contact form” width=“602” height=“462” />
+
+With some translation magic, here is how you can add some spark to it.
+
+<img class=“alignnone size-full wp-image-3670” src=“https://rapidapi.com/blog/wp-content/uploads/2020/01/google-translate-form-app.gif” alt=“google translate form app” width=“644” height=“616” />
+
+Follow the steps below to build a demo HTML page containing this form with a translation feature.
+<h3>1. Create the Static HTML</h3>
+We start with the bare-bones HTML page. The UI is based on Bootstrap and we add some CSS to spice up the form elements.
+<pre class=“EnlighterJSRAW” data-enlighter-language=“null”><!DOCTYPE html>
+<html>
+<head>
+<title>Web Form With Language Translation</title>
+<link rel=“stylesheet” href=“https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css” integrity=“sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh” crossorigin=“anonymous”>
+<script src=“https://code.jquery.com/jquery-3.4.1.slim.min.js” integrity=“sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n” crossorigin=“anonymous”></script>
+<script src=“https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js” integrity=“sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo” crossorigin=“anonymous”></script>
+<script src=“https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js” integrity=“sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6” crossorigin=“anonymous”></script>
+<script
+src="https://code.jquery.com/jquery-3.4.1.min.js"
+integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+crossorigin=“anonymous”></script>
+<style type=“text/css”>
+body {
+background-color: #2ecc71;
+font-family: source-sans-pro, sans-serif;
+}
+
+h1 {
+  margin-left: auto;
+  margin-top: 50px;
+  text-align: center;
+  font-weight: 100;
+  font-size: 2.8em;
+  color: #ffffff;
+}
+
+div {
+  width: 500px;
+  margin: auto;
+}
+
+.formStyle { 
+  background-color: #2ecc71;
+  padding: 20px; 
+  width: 400px; 
+  margin-bottom: 20px; 
+  border-bottom-width: 1px; 
+  border-bottom-style: solid; 
+  border-bottom-color: #ecf0f1; 
+  border-top-style: none; 
+  border-right-style: none; 
+  border-left-style: none; 
+  font-size: 1em;
+  font-weight: 100;
+  color: #ffffff;
+}
+
+.formButton {
+  float: right;
+  background-color:#ffffff;
+  display:inline-block;
+  color:#2ecc71;
+  font-size:28px;
+  font-weight: 500;
+  padding:6px 24px;
+  margin-top: 15px;
+  margin-right: 60px;
+  text-decoration:none;
+}
+
+.formButton:hover {
+  background-color: #27ae60;
+  color:#ffffff;
+}
+
+.formButton:active {
+  position:relative;
+  top:3px;
+}
+
+.translate {
+  margin-left: auto;
+  margin-top: 50px;
+  text-align: center;
+  font-weight: 100;
+  font-size: 2.8em;
+  width:50%;
+  
+}
+
+.translate-option {
+  width:50%;
+  
+}
+
+/*To remove the outline that appears on clicking the input textbox*/
+input:focus {
+  outline: none;
+}
+
+/* To format the placeholder text color */
+::-webkit-input-placeholder {
+   color: #ecf0f1;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: #ecf0f1;  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: #ecf0f1;  
+}
+
+:-ms-input-placeholder {  
+   color: #ecf0f1;  
+}
+&lt;/style&gt;
+
+</head>
+<body>
+<div class=“container”>
+<div class=“row”>
+<div class=“col-sm”>
+
+&lt;/div&gt;
+&lt;div class="col-sm"&gt;
+  	&lt;div class="btn-group dropright translate"&gt;
+  &lt;button id="langSel" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"&gt;
+    Translate to
+  &lt;/button&gt;
+  &lt;div class="dropdown-menu translate-option"&gt;
+    &lt;a class="dropdown-item" href="#" tolang="en"&gt;English (default)&lt;/a&gt;
+    &lt;a class="dropdown-item" href="#" tolang="it"&gt;Italian&lt;/a&gt;
+    &lt;a class="dropdown-item" href="#" tolang="es"&gt;Spanish&lt;/a&gt;
+    &lt;a class="dropdown-item" href="#" tolang="de"&gt;German&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id="formHeading"&gt;
+		Contact Form
+&lt;/h1&gt;
+&lt;div&gt;
+  &lt;form action=""&gt;
+    &lt;input type="text" name="name" class="formStyle" placeholder="Name" required /&gt;
+    &lt;input type="text" name="email" class="formStyle" placeholder="Contact No." required /&gt;
+    &lt;input type="email" name="email" class="formStyle" placeholder="Email" required /&gt;
+  &lt;/form&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="col-sm"&gt;
+  
+&lt;/div&gt;
+
+</div>
+</div>
+
+</body>
+</html>
+</pre>
+It also imports JQuery for performing all the UI operations that we describe subsequently.
+<h3>2. Add Dropdown Click Handler</h3>
+The main UI trigger for this page is the selection of language from the dropdown. Define a new <code><script></code> block inside the <code><head></code> and add the “click” event handler for the dropdown menu inside a <code>$(document).ready( )</code> block.
+<pre class=“EnlighterJSRAW” data-enlighter-language=“null”><script type=“text/javascript”>
+
+$(document).ready(function(){
+
+    $(".dropdown-item").click(function(e){
+
+        });
+ });
+
+</script>
+</pre>
+We will come back to this event handler and add the logic inside it.
+<h3>3. Add JQuery AJAX Call To Invoke Google Translate API</h3>
+You can get a code snippet for invoking the API from the API console of Google Translate API.
+
+<img class=“alignnone size-full wp-image-3672” src=“https://rapidapi.com/blog/wp-content/uploads/2020/01/google-translate-api-code-snippet.png” alt=“google translate api code snippet” width=“513” height=“445” />
+
+We define a global variable “settings” to contain the AJAX call parameters, with some modifications. And then add a new function to handle the AJAX call.
+<pre class=“EnlighterJSRAW” data-enlighter-language=“null”>var settings = {
+“async”: true,
+“crossDomain”: true,
+“url”: “https://google-translate1.p.rapidapi.com/language/translate/v2”,
+“method”: “POST”,
+“headers”: {
+“x-rapidapi-host”: “google-translate1.p.rapidapi.com”,
+“x-rapidapi-key”: “<YOUR_RAPIDAPI_KEY>”,
+“content-type”: “application/x-www-form-urlencoded”
+},
+“data”: {
+“source”: “en”,
+“q”: “Contact Form | Name | Contact Number | Email”,
+“target”: “”
+}
+
+}
+
+function fetchTranslation(){
+
+$.ajax(settings).done(function (response) {
+
+console.log(response);
+
+  var translatedText = response.data.translations[0].translatedText;
+    
+  updatePlaceholders(translatedText);
+
+});
+
+}
+</pre>
+Be sure to replace the <YOUR_RAPIDAPI_KEY> placeholder with your RapidAPI subscription key in the variable <span style=“font-family: ‘courier new’, courier, monospace;”>settings</span>. This variable also holds the data for API requests. Since there are four fields in the form to be translated, we use a single string with four tokens separated by a ‘|’ character to get the translated response from API in one call itself.
+
+The value of the <span style=“font-family: ‘courier new’, courier, monospace;”>‘target’</span> key for selecting the language will be set as part of the “click” event handler in step 6 below.
+<h3>5. Add The Form Placeholder Update Code</h3>
+The translated text returned by Google Translate API is deciphered based on the ‘|’ character and then replaced with the h1 tag as well as the placeholder text of the form elements. This happens inside another function <span style=“font-family: ‘courier new’, courier, monospace;”>updatePlaceholders( )</span> which is called as part of AJAX response handling.
+<pre class=“EnlighterJSRAW” data-enlighter-language=“null”>function updatePlaceholders(updateString){
+
+var comp = updateString.split(’|’)
+
+$(‘form > input’).each(function(idx){
+
+$(this).prop("placeholder", comp[idx+1].trim() );
+
+});
+
+$("#formHeading").html(comp[0]);
+
+}
+</pre>
+<h3>6. Add Login for “click” Event Handler</h3>
+Finally, we are ready to add some code inside the “click” event handler to complete the functionality.
+
+By default the language is English. So the logic of the “click” event handler should decide to trigger the API only if the selected language is not English. Before triggering, it replaces the <span style=“font-family: ‘courier new’, courier, monospace;”>‘target’</span> key under <span style=“font-family: ‘courier new’, courier, monospace;”>‘settings.data’</span> with the language code of target language, that we embed as an HTML attribute to the dropdown menu element.
+<pre class=“EnlighterJSRAW” data-enlighter-language=“null”>$(".dropdown-item").click(function(e){
+
+if($(this).attr(“tolang”) != ‘en’){
+
+settings.data.target = $(this).attr("tolang");
+
+fetchTranslation();
+
+$('button').html($(this).html());
+
+} else {
+
+updatePlaceholders(settings.data.q);
+
+$('#langSel').html("Translate to");
+
+}
+
+});
+</pre>
+There you are. Now your form is capable of translating the placeholder text into three languages, Italian, Spanish and German. In case you want to get hold of the entire HTML file then here it is.
+<pre class=“EnlighterJSRAW” data-enlighter-language=“null”><!DOCTYPE html>
+<html>
+<head>
+<title>Web Form With Language Translation</title>
+<link rel=“stylesheet” href=“https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css” integrity=“sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh” crossorigin=“anonymous”>
+<script src=“https://code.jquery.com/jquery-3.4.1.slim.min.js” integrity=“sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n” crossorigin=“anonymous”></script>
+<script src=“https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js” integrity=“sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo” crossorigin=“anonymous”></script>
+<script src=“https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js” integrity=“sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6” crossorigin=“anonymous”></script>
+<script
+src="https://code.jquery.com/jquery-3.4.1.min.js"
+integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+crossorigin=“anonymous”></script>
+<style type=“text/css”>
+body {
+background-color: #2ecc71;
+font-family: source-sans-pro, sans-serif;
+}
+
+h1 {
+  margin-left: auto;
+  margin-top: 50px;
+  text-align: center;
+  font-weight: 100;
+  font-size: 2.8em;
+  color: #ffffff;
+}
+
+div {
+  width: 500px;
+  margin: auto;
+}
+
+.formStyle { 
+  background-color: #2ecc71;
+  padding: 20px; 
+  width: 400px; 
+  margin-bottom: 20px; 
+  border-bottom-width: 1px; 
+  border-bottom-style: solid; 
+  border-bottom-color: #ecf0f1; 
+  border-top-style: none; 
+  border-right-style: none; 
+  border-left-style: none; 
+  font-size: 1em;
+  font-weight: 100;
+  color: #ffffff;
+}
+
+.formButton {
+  float: right;
+  background-color:#ffffff;
+  display:inline-block;
+  color:#2ecc71;
+  font-size:28px;
+  font-weight: 500;
+  padding:6px 24px;
+  margin-top: 15px;
+  margin-right: 60px;
+  text-decoration:none;
+}
+
+.formButton:hover {
+  background-color: #27ae60;
+  color:#ffffff;
+}
+
+.formButton:active {
+  position:relative;
+  top:3px;
+}
+
+.translate {
+  margin-left: auto;
+  margin-top: 50px;
+  text-align: center;
+  font-weight: 100;
+  font-size: 2.8em;
+  width:50%;
+  
+}
+
+.translate-option {
+  width:50%;
+  
+}
+
+/*To remove the outline that appears on clicking the input textbox*/
+input:focus {
+  outline: none;
+}
+
+/* To format the placeholder text color */
+::-webkit-input-placeholder {
+   color: #ecf0f1;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: #ecf0f1;  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: #ecf0f1;  
+}
+
+:-ms-input-placeholder {  
+   color: #ecf0f1;  
+}
+&lt;/style&gt;
+&lt;script type="text/javascript"&gt;
+	
+	var settings = {
+  "async": true,
+  "crossDomain": true,
+  "url": "https://google-translate1.p.rapidapi.com/language/translate/v2",
+  "method": "POST",
+  "headers": {
+    "x-rapidapi-host": "google-translate1.p.rapidapi.com",
+    "x-rapidapi-key": "&lt;YOUR_RAPIDAPI_KEY&gt;",
+    "content-type": "application/x-www-form-urlencoded"
+  },
+  "data": {
+    "source": "en",
+    "q": "Contact Form | Name | Contact Number | Email",
+    "target": ""
+  }
+  
+}
+
+$(document).ready(function(){
+
+    $(".dropdown-item").click(function(e){
+
+      if($(this).attr("tolang") != 'en'){
+
+        settings.data.target = $(this).attr("tolang");
+        
+        fetchTranslation();
+
+        $('button').html($(this).html());
+
+      } else {
+
+        updatePlaceholders(settings.data.q);
+
+        $('#langSel').html("Translate to");
+
+      }	
+
+    });
+
+});
+
+function fetchTranslation(){
+
+  $.ajax(settings).done(function (response) {
+    
+    console.log(response);
+
+    var translatedText = response.data.translations[0].translatedText;
+    
+    updatePlaceholders(translatedText);
+    
+
+  });
+
+}
+
+function updatePlaceholders(updateString){
+
+  var comp = updateString.split('|')
+
+  $('form &gt; input').each(function(idx){
+
+    $(this).prop("placeholder", comp[idx+1].trim() );
+
+  });
+
+  $("#formHeading").html(comp[0]);
+
+}
+
+&lt;/script&gt;
+
+</head>
+<body>
+<div class=“container”>
+<div class=“row”>
+<div class=“col-sm”>
+
+&lt;/div&gt;
+&lt;div class="col-sm"&gt;
+  	&lt;div class="btn-group dropright translate"&gt;
+  &lt;button id="langSel" type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"&gt;
+    Translate to
+  &lt;/button&gt;
+  &lt;div class="dropdown-menu translate-option"&gt;
+    &lt;a class="dropdown-item" href="#" tolang="en"&gt;English (default)&lt;/a&gt;
+    &lt;a class="dropdown-item" href="#" tolang="it"&gt;Italian&lt;/a&gt;
+    &lt;a class="dropdown-item" href="#" tolang="es"&gt;Spanish&lt;/a&gt;
+    &lt;a class="dropdown-item" href="#" tolang="de"&gt;German&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id="formHeading"&gt;
+		Contact Form
+&lt;/h1&gt;
+&lt;div&gt;
+  &lt;form action=""&gt;
+    &lt;input type="text" name="name" class="formStyle" placeholder="Name" required /&gt;
+    &lt;input type="text" name="email" class="formStyle" placeholder="Contact No." required /&gt;
+    &lt;input type="email" name="email" class="formStyle" placeholder="Email" required /&gt;
+  &lt;/form&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="col-sm"&gt;
+  
+&lt;/div&gt;
+
+</div>
+</div>
+
+</body>
+</html></pre>
+Copy the code, change the placeholder text <YOUR_RAPIDAPI_KEY> with your RapidAPI subscription key, and save it as an .html file. Open it in a web browser to experience the magic of translation.
+
+<center><a id=“sidebarCTA” class=“vce-button–style-basic vce-button–style-basic–border-round vce-button–style-basic–size-medium vce-button–style-basic–color-557cbf–fff” href=“https://rapidapi.com/googlecloud/api/google-translate1”>Connect to the Google Translate API</a></center>
+<h2>Translate On!</h2>
+Google Translate API is quite handy for translating short text. However, in the case of longer text, it may not be very accurate. That’s why it is well suited for this kind of application that needs translation of short text consisting of a couple of words.
+
+One more obvious thing to consider for this form is the repetition of API calls. As a smart coder, you would call the API once and cache the translated response, rather than calling it every time.
+
+Take the existing code and give it a shot at optimizing the API calls. You would save a lot while developing an app that has a lot of dynamic forms to present to visitors from all across the world.
+<h3>Other Applications</h3>
+<ul>
+<li><a href=“https://rapidapi.com/collection/translation-apis”>text translation service</a></li>
+<li><a href=“https://rapidapi.com/MeaningCloud/api/language-identification”>language detection or language identification</a></li>
+<li><a href=“https://rapidapi.com/blog/translation-app-google-translate/”>create a language translation service or app</a></li>
+<li>website widget</li>
+</ul>
+Good Luck! We will see you soon with yet another interesting API demo with RapidAPI.
+<h3>Related Resources</h3>
+<ul>
+<li><a href=“https://rapidapi.com/collection/natural-language-processing-api”>Top Natural Language Processing (NLP) APIs</a></li>
+<li><a href=“https://rapidapi.com/blog/alexa-api-project/”>Connect Amazon Alexa with Google Translate Skill</a></li>
+<li><a href=“https://rapidapi.com/blog/best-translation-sites/”>Best Translation Websites</a></li>
+<li><a href=“https://www.wpbeginner.com/plugins/how-to-add-google-translate-in-wordpress/”>Adding Google Translate in your WordPress site</a></li>
+</ul>
+<h3>Other Translation APIs</h3>
+<ul>
+<li><a href=“https://rapidapi.com/translated/api/mymemory-translation-memory”>MyMemory Translation</a></li>
+<li><a href=“https://rapidapi.com/microsoft-azure-org-microsoft-cognitive-services/api/microsoft-translator-text”>Microsoft Text Translation</a></li>
+<li><a href=“https://rapidapi.com/zakutynsky/api/YandexTranslate”>Yandex Translation</a></li>
+</ul>
